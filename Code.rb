@@ -25,7 +25,7 @@ chosen_region = Prompt.select("So, where do you want to eat in Sydney?", sydney_
 
 puts "Oooo.. #{chosen_region.name}! Great!"
 
-cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "Indian", "American", "I dont know"..]
+cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "American", "I dont know"..]
 
 chosen_cuisine = Prompt.select("Now.. what cuisine do you feel like?", cuisines, per_page: 3) 
 
@@ -37,4 +37,5 @@ for i in 0..chosen_region.restaurants.length-1
         puts chosen_region.restaurants[i].address
     end
 end
+
 
