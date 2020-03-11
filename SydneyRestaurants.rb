@@ -18,7 +18,6 @@ class Restaurant
 end
 
 CBD = Region.new("CBD", [
-    
 Restaurant.new("Mr Wong","Chinese","3 Bridge Ln, Sydney NSW 2000"),
 Restaurant.new("The Grand Pavilion", "Indian", "261 George St, Sydney NSW 2000")
 
