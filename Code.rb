@@ -6,7 +6,7 @@ require "tty-font"
 Prompt = TTY::Prompt.new
 Font = TTY::Font.new(:standard)
 
-emojis = "😭 🥺 😁 🤔 🤤 😮 🤩 🌮 🍝 🥗 🍕 🍣 🍔 🍜"
+emojis = "😭 🥺 😁 🤔 🤤 😮 🤩 🌮 🍝 🥗 🍗 🍕 🍱 🥐 🍲 🍣 🥘 🥙 🍔 🍜"
 $emoji_list = emojis.scan(Unicode::Emoji::REGEX)
 
 def organise
@@ -37,7 +37,7 @@ def user_details
     puts "\n\nHey #{user_name}!"
 end
 
-puts "\nWelcome! Let's find you somewhere good to eat.\n #{$emoji_list[3..-1]}"
+puts "\nWelcome! Let's find you somewhere good to eat.\n #{$emoji_list[7..-1].join" "}"
 
 choice = {'Yes' => true, 'No' => false}
 user_in_sydney = Prompt.select("\nFirstly, are you located in Sydney?", choice)
@@ -61,30 +61,39 @@ while continue == true
             
     puts "\n\nOooo.. #{chosen_region.name}! Great!"
 
-    cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "American", "I dont know"..]
+    cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "American", "Suprise me"]
 
     chosen_cuisine = Prompt.select("Now.. what cuisine do you feel like? #{$emoji_list[3]}", cuisines, per_page: 3) 
             
     organise()
-
-    puts "\n\n#{chosen_cuisine}! Delicious #{$emoji_list[4]}  Here's your restaurant..\n"
-
+        
         for i in 0..chosen_region.restaurants.length-1
-            if chosen_region.restaurants[i].cuisine == chosen_cuisine
-            result = chosen_region.restaurants[i].name 
-            puts result
+            result = chosen_region.restaurants[i]
+            if chosen_region.restaurants[i].cuisine == chosen_cuisine && chosen_region.restaurants[i].cuisine != "Suprise me"
+            result = chosen_region.restaurants[i]
+            puts "\n\n#{chosen_cuisine}! Delicious #{$emoji_list[4]}  Here's your restaurant..\n\n"
+            puts result.name
             puts "\nAnd here's the address..\n"
-            puts chosen_region.restaurants[i].address
-            puts
+            puts result.address
+            
+            elsif chosen_cuisine == "Suprise me" 
+                result = chosen_region.restaurants[-1]
+                puts "\n\nOK! If you say so..\n\n"
+                puts "Try this #{result.cuisine} restaurant"
+                puts result.name
+                puts "\nAnd here's the address..\n"
+                puts result.address
+                puts
+                break
             end
         end
 
     re_try = {'Yes' => true, 'No' => false}
-    try_again = Prompt.select("Feel like something else #{$emoji_list[5]} ?", re_try)
+    try_again = Prompt.select("\nFeel like something else #{$emoji_list[5]} ?", re_try)
 
     if try_again == false
         organise()
-        puts "\n\nEnjoy your meal at #{result} hun  #{$emoji_list[6]} "
+        puts "\n\nEnjoy your meal at #{result.name} hun  #{$emoji_list[6]} "
         puts "Come back soon for another delicious restauraunt recommendation!\n"
         organise()
     continue = false
