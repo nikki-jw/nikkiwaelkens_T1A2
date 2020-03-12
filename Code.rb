@@ -1,41 +1,84 @@
+
 require_relative "./SydneyRestaurants"
 require "tty-prompt"
 require "unicode/emoji"
 Prompt = TTY::Prompt.new
+ 
+continue = true
 
-puts "Welcome! Let's find you somewhere good to eat."
-
-choice = {'Yes' => true, 'No' => false}
-user_in_sydney = Prompt.select("Firstly, are you located in Sydney?", choice)
-
-if user_in_sydney != true
-    puts "Sorry, we're only giving recommendations for Sydney for now."
-    puts "Check back soon!"
-
-else 
-    puts "Great! Lets start off with your name?"
-    user_name = gets.chomp
+def organise
+    puts 
+    60.times {print "_"}
+    puts 
 end
 
-puts "Hey #{user_name}!"
+def user_details
+    organise()
+    puts "\n\nGreat! Lets start off with your name?"
+    user_name = gets.chomp
+        
+        while !user_name.match(/^[[:alpha:]]+$/)
+            organise()
+            puts "\n\nSorry"
+            puts "Please input your first name:"
+            user_name = gets.chomp
+        end
+    organise()
+    puts "\n\nHey #{user_name}!"
+end
 
-sydney_regions = {"CBD" => CBD, "Inner West" => Inner_west, "Inner City" => Inner_city, "Northern Sydney" => Northern_sydney, "Eastern Suburbs" => Eastern_suburbs, "Southern Sydney" => Southern_sydney, "Western Sydney" => Western_sydney}
+puts "\n\nWelcome! Let's find you somewhere good to eat."
 
-chosen_region = Prompt.select("So, where do you want to eat in Sydney?", sydney_regions)
+choice = {'Yes' => true, 'No' => false}
+user_in_sydney = Prompt.select("\nFirstly, are you located in Sydney?", choice)
 
-puts "Oooo.. #{chosen_region.name}! Great!"
+if user_in_sydney != true
+    organise()
+    continue = false
+    puts "\nSorry, we're only giving recommendations for Sydney for now."
+    puts "Check back soon!"
+else
+user_details
+end
 
-cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "American", "I dont know"..]
+while continue == true
 
-chosen_cuisine = Prompt.select("Now.. what cuisine do you feel like?", cuisines, per_page: 3) 
+    sydney_regions = {"CBD" => CBD, "Inner West" => Inner_west, "Inner City" => Inner_city, "Northern Sydney" => Northern_sydney, "Eastern Suburbs" => Eastern_suburbs, "Southern Sydney" => Southern_sydney, "Western Sydney" => Western_sydney}
+    chosen_region = Prompt.select("\nSo, where do you want to eat in Sydney?", sydney_regions)
+        
+    organise()
+            
+    puts "\n\nOooo.. #{chosen_region.name}! Great!"
 
-puts "#{chosen_cuisine}! Delicious. Let me bring up a restaurant.."
+    cuisines = ["Chinese", "Indian", "Japanese", "Italian", "Thai/Vietnamese", "Mexican", "American", "I dont know"..]
 
-for i in 0..chosen_region.restaurants.length-1
-    if chosen_region.restaurants[i].cuisine == chosen_cuisine
-        puts chosen_region.restaurants[i].name 
-        puts chosen_region.restaurants[i].address
+    chosen_cuisine = Prompt.select("Now.. what cuisine do you feel like?", cuisines, per_page: 3) 
+            
+    organise()
+
+    puts "\n\n#{chosen_cuisine}! Delicious. Here's your restaurant..\n"
+
+        for i in 0..chosen_region.restaurants.length-1
+            if chosen_region.restaurants[i].cuisine == chosen_cuisine
+            result = chosen_region.restaurants[i].name 
+            puts result
+            puts "\nAnd here's the address..\n"
+            puts chosen_region.restaurants[i].address
+            puts
+            end
+        end
+
+    re_try = {'Yes' => true, 'No' => false}
+    try_again = Prompt.select("Want something else? Try again?", re_try)
+
+    if try_again == false
+    continue = false
+    else
+    organise()
+    puts
     end
 end
 
-
+organise()
+puts "\n\nEnjoy your meal hun"
+puts "Untill next time\n\n"
