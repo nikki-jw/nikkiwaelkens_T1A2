@@ -3,6 +3,8 @@ require_relative "./SydneyRestaurants"
 require "tty-prompt"
 require "unicode/emoji"
 require "tty-font"
+require "colorize"
+
 Prompt = TTY::Prompt.new
 Font = TTY::Font.new(:standard)
 
@@ -37,7 +39,7 @@ def user_details
     puts "\n\nHey #{user_name}!"
 end
 
-puts "\nWelcome! Let's find you somewhere good to eat.\n #{$emoji_list[7..-1].join" "}"
+puts "\nWelcome! Let's find you somewhere good to eat.\n#{$emoji_list[7..-1].join" "}".colorize(:light_blue)
 
 choice = {'Yes' => true, 'No' => false}
 user_in_sydney = Prompt.select("\nFirstly, are you located in Sydney?", choice)
@@ -71,18 +73,18 @@ while continue == true
             result = chosen_region.restaurants[i]
             if chosen_region.restaurants[i].cuisine == chosen_cuisine && chosen_region.restaurants[i].cuisine != "Suprise me"
             result = chosen_region.restaurants[i]
-            puts "\n\n#{chosen_cuisine}! Delicious #{$emoji_list[4]}  Here's your restaurant..\n\n"
-            puts result.name
+            puts "\n\n#{chosen_cuisine}! Delicious #{$emoji_list[4]}  Here's your restaurant..\n"
+            puts result.name.colorize(:light_blue)
             puts "\nAnd here's the address..\n"
-            puts result.address
+            puts result.address.colorize(:light_blue)
             
             elsif chosen_cuisine == "Suprise me" 
                 result = chosen_region.restaurants[-1]
                 puts "\n\nOK! If you say so..\n\n"
                 puts "Try this #{result.cuisine} restaurant"
-                puts result.name
+                puts result.name.colorize(:light_blue)
                 puts "\nAnd here's the address..\n"
-                puts result.address
+                puts result.address.colorize(:light_blue)
                 puts
                 break
             end
@@ -95,6 +97,7 @@ while continue == true
         organise()
         puts "\n\nEnjoy your meal at #{result.name} hun  #{$emoji_list[6]} "
         puts "Come back soon for another delicious restauraunt recommendation!\n"
+        puts $emoji_list[7..-1].join" "
         organise()
     continue = false
     else
